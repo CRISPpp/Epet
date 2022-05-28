@@ -1,0 +1,58 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    #应用名称
+    name: epet_take_out
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/epet?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: Aa2314679520
+
+  redis:
+    host: localhost
+    port: 6379
+    database: 0 #擦做0号数据库
+    jedis:
+      #连接池配置
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: 1ms
+        max-idle: 4 #最大空闲连接
+        min-idle: 0 #最小空闲连接
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+
+  main:
+    lazy-initialization: false
+
+  cache:
+    redis:
+      time-to-live: 180000 #单位ms
+
+  mail:
+    host: smtp.126.com
+    username: epetnet@126.com
+    password: LECDBUPLHYXXPCXM
+    properties.mail.smtp.port: 994 #465或者994
+    # from: epetnet@126.com # 发送邮件的地址，和上面username一致
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射,address_book -> AddressBook
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
