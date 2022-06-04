@@ -1,5 +1,6 @@
 package com.epetnet.epetnet.controller;
 
+import com.epetnet.epetnet.util.FileUploader;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,12 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebsocketTestController {
     @GetMapping("/index")
-    public String getIndex(){
+    public String getIndex() throws Exception {
 //        if(true){
 //            //throw new SystemException(Code.SAVE_ERROR, "systemerror");
 //            //throw new BusinessException(Code.BUSINESS_ERROR, "businesserror");
 //            throw new RuntimeException();
 //        }
+        new FileUploader().upload();
         return "index";
     }
 }
