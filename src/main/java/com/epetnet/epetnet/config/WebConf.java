@@ -41,7 +41,7 @@ public class WebConf extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.epet.epet.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.epetnet.epetnet.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

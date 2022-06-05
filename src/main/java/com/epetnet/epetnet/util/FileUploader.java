@@ -12,8 +12,8 @@ public class FileUploader {
             // Create a minioClient with the MinIO server playground, its access key and secret key.
             MinioClient minioClient =
                     MinioClient.builder()
-                            .endpoint("http://？:11000")
-                            .credentials("crisp", "？")
+                            .endpoint("http://www.crisp.tk:11000")
+                            .credentials("crisp", "111")
                             .build();
 
             boolean found =
