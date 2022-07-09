@@ -20,6 +20,7 @@ public class EpetInterceptor implements HandlerInterceptor {
     //路径匹配器
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
     public static String[] urls = {
+            "/**",
             "/index",
             "/minio/**",
     };
