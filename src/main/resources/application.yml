@@ -8,12 +8,12 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql:///epet?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://119.29.100.51:3306/epet?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password:
 
   redis:
-    host:
+    host: 119.29.100.51
     port: 6379
     database: 0 #擦做0号数据库
     jedis:
@@ -23,7 +23,7 @@ spring:
         max-wait: 1ms
         max-idle: 4 #最大空闲连接
         min-idle: 0 #最小空闲连接
-    password:
+    password: 
 
   thymeleaf:
     prefix: classpath:/templates/
