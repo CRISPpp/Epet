@@ -7,22 +7,22 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 @AllArgsConstructor
 @ApiModel
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L;//序列化版本
+    private static final long serialVersionUID = 1123123123L;//序列化版本
 
     @ApiModelProperty(value = "id")
     private Long id;
     @ApiModelProperty(value = "头像")
     private String icon;
-    @ApiModelProperty(value = "昵称")
-    private String nickname;
     @ApiModelProperty(value = "性别")
     private String sex;
     @ApiModelProperty(value = "城市")
@@ -37,6 +37,8 @@ public class User implements Serializable {
     private String phone;
     @ApiModelProperty(value = "密码")
     private String password;
+    @ApiModelProperty(value = "用户名")
+    private String userName;
 
     @TableField(fill = FieldFill.INSERT)
     @TableLogic

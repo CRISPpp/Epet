@@ -19,6 +19,7 @@ public class FileUploader {
 
     @Value("${minio.bucketName}")
     private static String bucketName;
+
     public void upload() throws Exception{
         try {
             // Create a minioClient with the MinIO server playground, its access key and secret key.
@@ -33,7 +34,7 @@ public class FileUploader {
             if (!found) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             } else {
-                System.out.println("Bucket crisp already exists.");
+                System.out.println("Bucket 'crisp' already exists.");
             }
 
             minioClient.uploadObject(

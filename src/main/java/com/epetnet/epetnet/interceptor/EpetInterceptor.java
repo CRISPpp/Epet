@@ -1,7 +1,6 @@
 package com.epetnet.epetnet.interceptor;
 
 import com.alibaba.fastjson.JSON;
-
 import com.epetnet.epetnet.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -11,8 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Component

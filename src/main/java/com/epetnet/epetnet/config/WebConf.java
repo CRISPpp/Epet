@@ -3,12 +3,12 @@ package com.epetnet.epetnet.config;
 import com.epetnet.epetnet.common.JacksonObjectMapper;
 import com.epetnet.epetnet.interceptor.EpetInterceptor;
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -28,11 +28,11 @@ public class WebConf extends WebMvcConfigurationSupport {
     @Autowired
     private EpetInterceptor epetInterceptor;
 
-    //interceptor
-    @Override
-    protected void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(epetInterceptor).addPathPatterns("/**");
-    }
+//    //interceptor
+//    @Override
+//    protected void addInterceptors(InterceptorRegistry registry){
+//        registry.addInterceptor(epetInterceptor).addPathPatterns("/**");
+//    }
 
     //knife4j
     @Bean
@@ -41,7 +41,9 @@ public class WebConf extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.epetnet.epetnet.controller"))
+                // 扫描所有有注解的api，用这种方式更灵活
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+//                .apis(RequestHandlerSelectors.basePackage("com.epetnet.epetnet.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

@@ -1,11 +1,12 @@
 package com.epetnet.epetnet.controller;
 
 import com.alibaba.fastjson.JSON;
-
-
 import com.epetnet.epetnet.common.R;
 import io.minio.*;
 import io.minio.messages.Item;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Api("minio")
 @Slf4j
 @RequestMapping("/minio")
 @RestController
@@ -82,6 +83,7 @@ public class MinioController {
         }
     }
 
+
     /**
      * 删除
      * @param fileName
@@ -99,29 +101,31 @@ public class MinioController {
     }
 
 
+
     /**
-     * 多文件上传
-     * @param files
-     * @return
+     * 文件上传
      */
+    @SneakyThrows
+    @ApiOperation("上传图片")
     @PostMapping("/upload")
-    public R<String> uploadFile(@RequestParam(name = "file", required = false)MultipartFile[] files){
-        if(files == null || files.length == 0){
+    public R<String> uploadFile(@RequestBody MultipartFile file){
+        if(file == null){
             return R.error("上传文件不能为空");
         }
 
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
+            String originalFileName = file.getOriginalFilename();
+
+            InputStream inputStream = file.getInputStream();
+
+            String fileName = bucketName + System.currentTimeMillis() + originalFileName;
             //上传
             try {
-                InputStream inputStream = file.getInputStream();
                 minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(fileName).stream(inputStream,file.getSize(),-1).contentType(file.getContentType()).build());
                 inputStream.close();
             }catch (Exception e){
                 log.info(e.getMessage());
                 return R.error("上传失败");
             }
-        }
-        return R.success("上传成功");
+        return R.success(fileName);
     }
 }

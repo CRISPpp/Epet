@@ -1,51 +1,64 @@
 package com.epetnet.epetnet.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.epetnet.epetnet.common.Constants;
 import com.epetnet.epetnet.common.R;
+import com.epetnet.epetnet.entity.LoginBody;
+import com.epetnet.epetnet.entity.LoginValidateBody;
 import com.epetnet.epetnet.entity.User;
-import com.epetnet.epetnet.util.JwtUtil;
+import com.epetnet.epetnet.security.service.SysLoginService;
+import com.epetnet.epetnet.service.UserService;
+import com.epetnet.epetnet.util.RedisCache;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 登录Controller
  */
 @Slf4j
 @RestController
+@RequestMapping("/login")
+@Api("登录")
 public class LoginController
 {
-    static Map<Integer, User> userMap = new HashMap<>();
+    @Autowired
+    private SysLoginService loginService;
 
-    static {
-        //模拟数据库
-        User user1 = new User(1L, "张三", "zhangsan", "male","guangdong","pos1","no","2314655555@qq.com","12333323323","123456",0,LocalDateTime.now(), LocalDateTime.now());
-        userMap.put(1, user1);
-        User user2 = new User(2L, "李四", "李四", "female","guangdong","pos1","no","2214655555@qq.com","12433323323","123456",0,LocalDateTime.now(), LocalDateTime.now());
-        userMap.put(2, user2);
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private UserService userService;
+
+    @ApiOperation("通过密码登录")
+    @PostMapping("/password")
+    public R<String> loginByPassword(@RequestBody LoginBody loginBody){
+        String token = loginService.login(loginBody.getPhone(), loginBody.getPassword());
+        return R.success(token);
     }
 
-    /**
-     * 模拟用户 登录
-     */
-    @GetMapping("/login")
-    public R<String> login(User user)
-    {
-        for (User dbUser : userMap.values()) {
-            if (dbUser.getNickname().equals(user.getNickname()) && dbUser.getPassword().equals(user.getPassword())) {
-                log.info("登录成功！生成token！");
-                String token = JwtUtil.createToken(dbUser);
-                log.info(token);
-                return R.success(token);
-            }
-        }
-        return R.error("???");
+    @ApiOperation("通过验证码登录")
+    @PostMapping("/validate")
+    public R<String> loginByValidate(@RequestBody LoginValidateBody loginValidateBody){
+        String key = Constants.PHONE_LOGIN_VALIDATE_KEY + loginValidateBody.getPhone();
+        String code = redisCache.getCacheObject(key);
+
+        if(code == null) return R.error("验证码已过期");
+        if(!(code.equals(loginValidateBody.getValidateCode()))) return R.error("验证码错误");
+
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getPhone, loginValidateBody.getPhone());
+        User user = userService.getOne(wrapper);
+        if(user == null) return R.error("该手机号用户不存在");
+
+        String token = loginService.login(user.getPhone(), user.getPassword());
+        return R.success(token);
     }
 }

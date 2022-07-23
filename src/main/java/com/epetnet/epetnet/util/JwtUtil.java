@@ -44,15 +44,8 @@ public class JwtUtil {
                 .withHeader(map)// 添加头部
                 //加密算法HMACSHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
                 .withClaim("id", user.getId())//userId
-                .withClaim("nickName", user.getNickname())//nickName
+                .withClaim("userName", user.getUserName())//userName
                 .withClaim("password", user.getPassword())//password
-                .withClaim("icon", user.getIcon())
-                .withClaim("sex", user.getSex())
-                .withClaim("city", user.getCity())
-                .withClaim("position", user.getPosition())
-                .withClaim("profile", user.getProfile())
-                .withClaim("mail", user.getMail())
-                .withClaim("phone", user.getPhone())
                 .withExpiresAt(expireDate) //超时设置,设置过期的日期
                 .withIssuedAt(new Date()) //签发时间
                 .sign(Algorithm.HMAC256(SECRET)); //SECRET加密
