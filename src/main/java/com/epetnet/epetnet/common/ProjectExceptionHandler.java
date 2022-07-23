@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProjectExceptionHandler {
     @ExceptionHandler(SystemException.class)
     public R<String> doSystemException(SystemException exception){
+        exception.printStackTrace();
         //记录日志
         log.info("SystemError");
         //发消息给运维
@@ -23,6 +24,7 @@ public class ProjectExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public R<String> doBusinessException(BusinessException exception){
+        exception.printStackTrace();
         //记录日志
         log.info("BusinessError");
         //发消息给运维,让他把ip封了
@@ -33,6 +35,7 @@ public class ProjectExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public R<String> OtherException(Exception exception){
+        exception.printStackTrace();
         //记录日志
         log.info("gg");
         //发消息给运维
